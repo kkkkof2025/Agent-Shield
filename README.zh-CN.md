@@ -1,5 +1,7 @@
 # AgentShield Runtime
 
+[English](README.md) | 简体中文
+
 AgentShield Runtime 是一个本地 AI CLI 上层运行时，用来包装、管理和审计 Codex CLI、OpenClaw、Claude Code、Gemini CLI、Aider 等本地命令行 Agent。
 
 它不是：
@@ -41,6 +43,8 @@ Phase 1 已经实现并可用：
 - Phase 3：多 Agent 适配器
 - Phase 4：hooks / guardrails
 - 真实交互式 `run codex` 和 `resume --last` 的完整 TTY 验证
+
+详细待办见 [TODO.md](TODO.md)。
 
 ## 快速开始
 

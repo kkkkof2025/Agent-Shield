@@ -1,5 +1,7 @@
 # AgentShield Runtime
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 AgentShield Runtime is a local AI CLI wrapper for Codex CLI, OpenClaw, Claude Code, Gemini CLI, Aider, and other command-line agents.
 
 It is not antivirus, EDR, malware analysis tooling, privilege escalation tooling, or credential extraction tooling.
@@ -34,6 +36,8 @@ What is still future work:
 - Phase 3 multi-agent adapters
 - Phase 4 hooks and guardrails
 - Full interactive `run codex` and `resume --last` validation in a real TTY
+
+See [TODO.md](TODO.md) for the tracked roadmap.
 
 ## Quick Start
 
