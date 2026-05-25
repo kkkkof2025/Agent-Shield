@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.agent-shield/
+data/snapshots/*.json
+data/reports/*.md
+data/sessions/canonical/*.json
+data/sessions/summaries/*.md
+*.log
+/hello.ps1

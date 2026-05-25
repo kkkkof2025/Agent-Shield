@@ -1,0 +1,11 @@
+provider: codex
+profile: safe
+session_memory:
+  inject_summary: true
+  inject_tasks: true
+  inject_decisions: true
+safety:
+  deny_sensitive_file_content: true
+  deny_persistence_changes_without_confirmation: true
+  record_metadata_only_for_sensitive_paths: true
+

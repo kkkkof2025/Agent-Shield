@@ -1,0 +1,33 @@
+default_policy:
+  sandbox_mode: workspace-write
+  approval_policy: on-request
+  network_access: false
+
+deny_commands:
+  - powershell -EncodedCommand
+  - Invoke-Expression
+  - IEX
+  - FromBase64String
+  - reg add *Run*
+  - schtasks /create
+  - wscript
+  - cscript
+  - mshta
+
+protected_paths:
+  - "%USERPROFILE%\\.ssh"
+  - "%USERPROFILE%\\.codex\\auth.json"
+  - "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
+  - "%PROGRAMDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup"
+  - "%LOCALAPPDATA%\\Google\\Chrome\\User Data"
+  - "%APPDATA%\\Mozilla\\Firefox\\Profiles"
+
+confirm_before_touch:
+  - "%USERPROFILE%\\.codex"
+  - "%USERPROFILE%\\.openclaw"
+  - "%USERPROFILE%\\.claude"
+  - "%USERPROFILE%\\.gitconfig"
+  - "PowerShell Profile"
+  - "Run / RunOnce"
+  - "Scheduled Tasks"
+
