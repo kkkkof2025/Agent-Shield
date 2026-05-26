@@ -116,9 +116,10 @@ agent-shield hooks remove codex
 3. 创建 before snapshot。
 4. 启动 Codex。
 5. 创建 after snapshot。
-6. 生成 canonical session。
-7. 输出 Markdown 报告。
-8. 更新 `.agent-shield/session-summary.md`。
+6. 在 Codex 已持久化 transcript 时扫描会话文本风险。
+7. 生成 canonical session。
+8. 输出 Markdown 报告。
+9. 更新 `.agent-shield/session-summary.md`。
 
 `resume --last` 的流程：
 
@@ -132,6 +133,7 @@ agent-shield hooks remove codex
 - 不读取或记录 token、cookie、密码、私钥、证书私钥、浏览器凭据内容。
 - 敏感路径只记录元数据。
 - Phase 1 的 hooks 安装/移除仍是占位，不会修改用户配置。
+- transcript 风险扫描是尽力而为：如果 Codex 没有把交互提示或工具调用写入可读 session 文件，只有 hooks 或 SDK runtime 才能实时捕获。
 
 ## 查询历史风险记录
 

@@ -86,6 +86,8 @@ agent-shield run codex
 - high/medium 风险数量
 - 风险摘要
 
+注意：`run codex` 对 Codex 交互内容的检测依赖 Codex 是否把提示词或工具调用写入可读 session 文件。没有真实 hooks/SDK runtime 前，这仍然是退出后的尽力扫描，不是中途拦截。
+
 也可以事后查询：
 
 ```powershell
@@ -107,4 +109,3 @@ agent-shield report --last
 
 - `agent-shield hooks install codex` 生成真实 PreToolUse 拦截配置。
 - Phase 2 Codex SDK Runtime 中统一拦截 tool calls。
-

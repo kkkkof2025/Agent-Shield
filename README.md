@@ -105,9 +105,10 @@ agent-shield hooks remove codex
 3. Creates a before snapshot.
 4. Runs Codex.
 5. Creates an after snapshot.
-6. Builds a canonical session record.
-7. Writes a Markdown report.
-8. Updates `.agent-shield/session-summary.md`.
+6. Scans the persisted Codex session transcript when available.
+7. Builds a canonical session record.
+8. Writes a Markdown report.
+9. Updates `.agent-shield/session-summary.md`.
 
 `resume --last`:
 
@@ -121,6 +122,7 @@ agent-shield hooks remove codex
 - Never read or store token, cookie, password, private key, certificate private key, or browser credential contents.
 - Sensitive paths are recorded as metadata only.
 - Hooks installation/removal is still a placeholder in Phase 1.
+- Transcript-based risk scanning is best-effort. If Codex does not persist the prompt or tool call into a readable session file, only hooks or SDK runtime can catch it live.
 
 ## Querying Risk History
 

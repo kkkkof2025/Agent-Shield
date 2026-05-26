@@ -2,7 +2,7 @@ import path from "node:path";
 import { AgentAdapter, AgentCheckResult } from "./agent-adapter";
 import { commandExists, getCommandVersion } from "./generic-cli-adapter";
 import { inspectCodexConfig } from "../codex/codex-config";
-import { findLatestCodexSession } from "../codex/codex-session-reader";
+import { findLatestCodexSession, scanCodexSessionRisks } from "../codex/codex-session-reader";
 import { createProjectSnapshot } from "../snapshot/project-snapshot";
 import { diffSnapshots } from "../snapshot/snapshot-diff";
 import { CanonicalSession, GitState, RiskEvent } from "../session/canonical-session";
@@ -47,6 +47,7 @@ export async function runCodex(workspace: string, codexArgs: string[]): Promise<
   const after = await createProjectSnapshot(workspace);
   const snapshotDiff = await diffSnapshots(before.id, after.id);
   const latestCodexSession = await findLatestCodexSession(startedAt.getTime());
+  const codexSessionRisks = await scanCodexSessionRisks(latestCodexSession);
   const fileChanges = [...snapshotDiff.added, ...snapshotDiff.modified, ...snapshotDiff.deleted];
   const risks: RiskEvent[] = fileChanges
     .filter((change) => change.risk !== "low")
@@ -64,6 +65,7 @@ export async function runCodex(workspace: string, codexArgs: string[]): Promise<
       recommendation: "Confirm this command was intentional.",
     });
   }
+  risks.push(...codexSessionRisks);
 
   const session: CanonicalSession = {
     id: `as_${timestampForFile(startedAt)}_codex`,
@@ -74,7 +76,7 @@ export async function runCodex(workspace: string, codexArgs: string[]): Promise<
     endedAt: endedAt.toISOString(),
     status: exitCode === 0 ? "completed" : "failed",
     goal: codexArgs.join(" ") || "Codex CLI interactive session",
-    summary: `Codex exited with code ${exitCode}. File changes detected: ${fileChanges.length}.`,
+    summary: `Codex exited with code ${exitCode}. File changes detected: ${fileChanges.length}. Session text risks detected: ${codexSessionRisks.length}.`,
     messages: [],
     toolCalls: [],
     fileChanges,

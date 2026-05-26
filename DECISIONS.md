@@ -50,3 +50,20 @@ Impacts `src/cli.ts`, `src/core/scan-kernel.ts`, `src/safety/*`, `src/adapters/c
 
 ### 回滚方案
 Tune or disable individual static rules if false positives become too noisy. High-risk custom command blocking can be bypassed only with explicit `--allow-high-risk`.
+
+## 2026-05-26 Best-Effort Codex Transcript Scan
+
+### 背景
+A high-risk command entered inside `agent-shield run codex` was refused by Codex, but AgentShield still reported high=0 because the wrapper only evaluated the outer `codex` command and file diff.
+
+### 决策
+After `run codex` exits, scan persisted Codex session JSONL text for risky command/text patterns and add generic risk metadata to the canonical session and Markdown report.
+
+### 原因
+Phase 1 can inspect local session metadata after the process exits, but it cannot reliably observe Codex's live interactive input stream. Persisted transcript scanning improves reports without storing raw prompts or sensitive content. Full live interception still belongs to hooks or SDK runtime.
+
+### 影响
+Impacts `src/codex/codex-session-reader.ts`, `src/adapters/codex-adapter.ts`, `src/safety/command-risk.ts`, `src/safety/risk-rules.ts`, and documentation.
+
+### 回滚方案
+Disable transcript scanning or narrow scanned fields if false positives are too noisy. Keep live blocking for the future hooks/SDK implementation.

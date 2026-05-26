@@ -19,6 +19,7 @@ This project is not fully complete. Phase 1 is usable; later phases remain plann
 - [x] Implement static `scan` for command/text/file risk checks.
 - [x] Print report path and risk summary after `run codex`.
 - [x] Block high-risk custom commands by default.
+- [x] Add best-effort Codex transcript scanning after `run codex`.
 - [x] Add English and Simplified Chinese README files.
 - [x] Push initial project to GitHub.
 

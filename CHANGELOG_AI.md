@@ -33,3 +33,6 @@
 - Added `docs/security-test-examples.zh-CN.md` with test cases for API relay/公益中转 risks, model substitution, token drain, role modification, hidden payloads, and persistence paths.
 - Updated README, README.zh-CN, TODO, and RUNBOOK with the new usage examples and current safety boundaries.
 - Created commit `270f77c Enhance safety scanning and reporting` and synced it to GitHub after a force-with-lease update.
+- Fixed a report gap where `run codex` only evaluated the outer `codex` command and file diffs. It now scans persisted Codex session text for risky command/text patterns when available.
+- Split pure command-pattern detection from text-risk fallback to reduce duplicate `codex-session-command-text` findings.
+- Created local commit `3af6ae3 Scan Codex transcripts for session risks`; GitHub push is still pending because the latest push attempt timed out.

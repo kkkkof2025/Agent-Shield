@@ -1,11 +1,11 @@
 ## 当前任务
 - [ ] 任务名称：安全检测增强、示例完善和 GitHub 同步
 - [ ] 目标：补充安全测试例子，运行 Codex 后自动提示报告和风险摘要，增加静态检测和可行范围内的拦截能力，并提交推送到 GitHub。
-- [ ] 当前状态：本地实现、验证、提交和推送均已完成。
-- [ ] 已完成：新增 `scan` 命令；扩展命令/路径/文本风险规则；`run codex` 结束后输出 report 和风险摘要；高风险 custom run 默认拦截；补充安全测试文档、README、TODO、RUNBOOK；创建并同步本地 commit。
-- [ ] 未完成：Codex 内部 tool call 中途拦截仍需后续 hooks 或 SDK runtime。
-- [ ] 阻塞点：无。
-- [ ] 下一步：继续完善 Phase 2/4 能力，优先考虑真实 hooks 或 SDK runtime。
+- [ ] 当前状态：发现并修复 `run codex` 未扫描 Codex transcript 的报告缺口，验证已通过，本地已提交，推送仍在等待。
+- [ ] 已完成：新增 `scan` 命令；扩展命令/路径/文本风险规则；`run codex` 结束后输出 report 和风险摘要；高风险 custom run 默认拦截；补充安全测试文档、README、TODO、RUNBOOK；创建本地 commit；新增退出后 transcript 尽力扫描。
+- [ ] 未完成：将 transcript 扫描修正推送到 GitHub；Codex 内部 tool call 中途拦截仍需后续 hooks 或 SDK runtime。
+- [ ] 阻塞点：`git push origin main` 超时，远程仍停在 `56e7cea`。
+- [ ] 下一步：用户本机完成 GitHub 认证或使用可用网络后，再执行 `git push origin main`。
 
 ## 已完成任务
 
@@ -41,7 +41,7 @@
 
 ### 2026-05-26 安全检测增强
 
-- 最终状态：完成并已同步到 GitHub。
-- 已完成：新增静态扫描、API 中转/公益中转风险识别、提示注入和角色修改识别、隐藏字符串识别、运行结束风险摘要、高风险 custom run 默认拦截、安全测试例子文档。
-- 验证：`npm run build`；`scan command` 检出 Encoded PowerShell 和远程脚本管道；`scan text` 检出 API relay、prompt injection、agent-role-modification、hidden-unicode；custom run 高风险命令被阻止；路径风险分类符合预期。
+- 最终状态：本地完成，远程 push 阻塞。
+- 已完成：新增静态扫描、API 中转/公益中转风险识别、提示注入和角色修改识别、隐藏字符串识别、运行结束风险摘要、高风险 custom run 默认拦截、安全测试例子文档；新增 Codex transcript 尽力扫描。
+- 验证：`npm run build`；`scan command` 检出 Encoded PowerShell、`iwr ... | iex`、远程脚本管道；`scan text` 检出 API relay、prompt injection、agent-role-modification、hidden-unicode；custom run 高风险命令被阻止；路径风险分类符合预期。
 - 未完成：Codex 内部 tool call 的中途拦截需要 Phase 4 hooks 或 Phase 2 SDK runtime。
