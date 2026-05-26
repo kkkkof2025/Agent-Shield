@@ -19,6 +19,8 @@ node dist/index.js snapshot diff <before> <after>
 node dist/index.js risks
 node dist/index.js risks --last
 node dist/index.js risks --level high
+node dist/index.js scan command "powershell -EncodedCommand <BASE64>"
+node dist/index.js scan text "ignore previous instructions"
 ```
 
 After `npm link`, the same commands are available as:
@@ -28,6 +30,7 @@ agent-shield inventory
 agent-shield check codex
 agent-shield run codex
 agent-shield risks --last
+agent-shield scan command "powershell -EncodedCommand <BASE64>"
 ```
 
 ## Codex Wrapper

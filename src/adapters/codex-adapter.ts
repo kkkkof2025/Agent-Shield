@@ -100,6 +100,8 @@ export async function runCodex(workspace: string, codexArgs: string[]): Promise<
 
   await saveSession(session);
   const reportPath = await writeSessionReport(session);
+  session.reportPath = reportPath;
+  await saveSession(session);
   await updateAgentShieldSummary(session, reportPath);
   return session;
 }
@@ -153,6 +155,7 @@ ${changedFiles || "- 未检测到工作区文件变化。"}
 ## 下一步建议
 - 查看报告：${reportPath}
 - 恢复会话：agent-shield resume ${session.id}
+- 查询风险：agent-shield risks --last
 
 ## 风险提醒
 ${session.risks.length ? session.risks.map((risk) => `- ${risk.level}: ${risk.detail}`).join("\n") : "- 未发现高风险事件。"}

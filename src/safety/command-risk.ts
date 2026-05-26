@@ -1,4 +1,5 @@
 import { commandRules } from "./risk-rules";
+import { classifyTextRisks } from "./text-risk";
 import { redactText } from "../utils/redaction";
 
 export interface CommandRisk {
@@ -14,6 +15,9 @@ export function classifyCommand(command: string): CommandRisk {
       return { level: rule.level, reason: rule.reason, command: redacted };
     }
   }
+  const [textRisk] = classifyTextRisks(redacted);
+  if (textRisk) {
+    return { level: textRisk.level, reason: textRisk.detail, command: redacted };
+  }
   return { level: "low", command: redacted };
 }
-

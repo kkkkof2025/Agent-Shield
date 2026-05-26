@@ -33,3 +33,20 @@ Impacts `src/cli.ts`, `src/utils/process.ts`, `src/adapters/generic-cli-adapter.
 
 ### 回滚方案
 If the helper causes side effects, revert to explicit executable paths and document manual launcher steps.
+
+## 2026-05-26 Static Scan And Pre-Execution Blocking
+
+### 背景
+Users need practical safety examples, automatic run-end risk summaries, limited pre-execution blocking, and recognition of role modification, hidden strings, and AI API relay abuse patterns.
+
+### 决策
+Add static `scan command|text|file`, expand command/path/text risk rules, print a report/risk summary after `run codex`, and block high-risk custom commands by default.
+
+### 原因
+These capabilities fit Phase 1 wrapper boundaries. Codex-internal mid-session tool blocking still requires real Codex hooks or a Codex SDK runtime, so it remains tracked as Phase 4/Phase 2 work.
+
+### 影响
+Impacts `src/cli.ts`, `src/core/scan-kernel.ts`, `src/safety/*`, `src/adapters/codex-adapter.ts`, README files, TODO, RUNBOOK, and security test documentation.
+
+### 回滚方案
+Tune or disable individual static rules if false positives become too noisy. High-risk custom command blocking can be bypassed only with explicit `--allow-high-risk`.

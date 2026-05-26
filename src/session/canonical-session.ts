@@ -65,9 +65,9 @@ export interface CanonicalSession {
   risks: RiskEvent[];
   nextSteps: string[];
   git?: GitState;
+  reportPath?: string;
   snapshots?: {
     before?: string;
     after?: string;
   };
 }
-

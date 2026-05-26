@@ -16,6 +16,9 @@ This project is not fully complete. Phase 1 is usable; later phases remain plann
 - [x] Implement Markdown session reports.
 - [x] Implement `.agent-shield/session-summary.md` updates.
 - [x] Implement `risks` history query.
+- [x] Implement static `scan` for command/text/file risk checks.
+- [x] Print report path and risk summary after `run codex`.
+- [x] Block high-risk custom commands by default.
 - [x] Add English and Simplified Chinese README files.
 - [x] Push initial project to GitHub.
 
@@ -26,6 +29,7 @@ This project is not fully complete. Phase 1 is usable; later phases remain plann
 - [ ] Add `agent-shield risks --session <id>`.
 - [ ] Improve report fields from parsed Codex JSONL sessions.
 - [ ] Add focused automated tests for snapshot diff, risk queries, and command parsing.
+- [ ] Turn Codex hook placeholders into real PreToolUse/PostToolUse integrations.
 
 ## Phase 2: Codex SDK Runtime
 
@@ -59,4 +63,3 @@ This project is not fully complete. Phase 1 is usable; later phases remain plann
 - [ ] Do not implement privilege escalation.
 - [ ] Do not implement credential extraction.
 - [ ] Do not read or store token, cookie, password, private key, certificate private key, or browser credential contents.
-

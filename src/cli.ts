@@ -9,6 +9,8 @@ import { printSessions } from "./core/session-kernel";
 import { showMemory } from "./core/memory-kernel";
 import { writeSessionReport } from "./core/report-kernel";
 import { queryRisks } from "./core/risk-kernel";
+import { scanCommandText, scanFile, scanPlainText } from "./core/scan-kernel";
+import { evaluateCommand } from "./safety/policy-engine";
 import { getLastSession, getSession, listSessions } from "./session/session-registry";
 import { Provider } from "./session/canonical-session";
 import { resolveSessionForResume } from "./session/resume-engine";
@@ -46,6 +48,9 @@ export async function main(argv = process.argv): Promise<void> {
         return;
       case "risks":
         printInfo(await risks(args.slice(1)));
+        return;
+      case "scan":
+        printInfo(await scan(args.slice(1)));
         return;
       case "memory":
         printInfo(await memory(args.slice(1)));
@@ -113,12 +118,22 @@ async function run(args: string[]): Promise<void> {
   if (provider === "codex") {
     const session = await runCodex(process.cwd(), args.slice(1));
     printInfo(`AgentShield session recorded: ${session.id}`);
+    printInfo(renderRunSummary(session));
     return;
   }
   if (provider === "--name") {
     const separator = args.indexOf("--");
     const name = args[1] || "custom";
+    const allowHighRisk = args.includes("--allow-high-risk");
     if (separator === -1 || separator === args.length - 1) throw new Error("Usage: agent-shield run --name custom -- <command>");
+    const commandText = args.slice(separator + 1).join(" ");
+    const commandRisk = evaluateCommand(commandText);
+    if (commandRisk.level === "high" && !allowHighRisk) {
+      printError(`Blocked high-risk command: ${commandRisk.reason || "risk rule matched"}`);
+      printError("Re-run with --allow-high-risk only after explicit review.");
+      process.exitCode = 2;
+      return;
+    }
     const exitCode = await spawnPassthroughPortable(args[separator + 1], args.slice(separator + 2), process.cwd());
     printInfo(`Custom command '${name}' exited with code ${exitCode}.`);
     process.exitCode = exitCode;
@@ -180,6 +195,17 @@ async function risks(args: string[]): Promise<string> {
   });
 }
 
+async function scan(args: string[]): Promise<string> {
+  const json = args.includes("--json");
+  const filtered = args.filter((arg) => arg !== "--json");
+  const target = filtered[0];
+  const value = filtered.slice(1).join(" ");
+  if (target === "command" && value) return scanCommandText(value, { json });
+  if (target === "text" && value) return scanPlainText(value, { json });
+  if (target === "file" && filtered[1]) return scanFile(filtered[1], { json });
+  throw new Error("Usage: agent-shield scan command <command> [--json] | scan text <text> [--json] | scan file <path> [--json]");
+}
+
 async function memory(args: string[]): Promise<string> {
   if (args[0] === "show") return showMemory(process.cwd());
   if (args[0] === "update") return "Memory update is handled by AgentShield session finalization in Phase 1.";
@@ -218,6 +244,23 @@ function normalizeArgs(args: string[]): string[] {
   return args[0] === "agent-shield" ? args.slice(1) : args;
 }
 
+function renderRunSummary(session: { status: string; reportPath?: string; risks: Array<{ level: string; type: string; detail: string }> }): string {
+  const high = session.risks.filter((risk) => risk.level === "high").length;
+  const medium = session.risks.filter((risk) => risk.level === "medium").length;
+  const lines = [
+    `Status: ${session.status}`,
+    `Report: ${session.reportPath || "not recorded"}`,
+    `Risk summary: high=${high}, medium=${medium}`,
+  ];
+  if (session.risks.length > 0) {
+    lines.push("Risks:");
+    for (const risk of session.risks.slice(0, 10)) {
+      lines.push(`- ${risk.level.toUpperCase()} | ${risk.type} | ${risk.detail}`);
+    }
+  }
+  return lines.join("\n");
+}
+
 function help(): string {
   return `AgentShield Runtime
 
@@ -235,6 +278,9 @@ Usage:
   agent-shield report --last
   agent-shield report <session-id>
   agent-shield risks [--last] [--level low|medium|high] [--json]
+  agent-shield scan command <command> [--json]
+  agent-shield scan text <text> [--json]
+  agent-shield scan file <path> [--json]
   agent-shield memory show
   agent-shield memory update
   agent-shield hooks install codex
